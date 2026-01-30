@@ -27,9 +27,13 @@ class WebServer {
       logger: true
     });
 
-    // Register CORS plugin with localhost-only configuration
+    // Register CORS plugin (localhost in dev; origin from env in Docker)
+    const port = Number(process.env.PORT) || 8221;
     this.server.register(fastifyCors, {
-      origin: ["http://localhost:8221", "http://127.0.0.1:8221"],
+      origin: [
+        `http://localhost:${port}`,
+        `http://127.0.0.1:${port}`,
+      ],
       methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
       credentials: true,
     });
@@ -247,9 +251,11 @@ class WebServer {
    * Starts the web server
    */
   async start(): Promise<void> {
+    const port = Number(process.env.PORT) || 8221;
+    const host = process.env.HOST || "localhost";
     try {
-      await this.server.listen({ port: 8221, host: "localhost" });
-      console.log(`Server is running at http://localhost:8221`);
+      await this.server.listen({ port, host });
+      console.log(`Server is running at http://${host}:${port}`);
     } catch (err) {
       this.server.log.error(err);
       process.exit(1);

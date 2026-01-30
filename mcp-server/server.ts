@@ -12,20 +12,25 @@ import {
 
 dayjs.extend(relativeTime);
 
-const mcpServer = new McpServer({
-  name: "KanbanMCP",
-  version: "1.1.0",
-});
+/**
+ * Creates an MCP server with all Kanban tools and prompts, using the given DB.
+ * Used for both stdio (local) and SSE (remote) entry points.
+ */
+export function createMcpServer(kanbanDB: KanbanDB): McpServer {
+  const mcpServer = new McpServer({
+    name: "KanbanMCP",
+    version: "1.1.0",
+  });
 
-const folderPath = process.env.MCP_KANBAN_DB_FOLDER_PATH ?? "./db";
-const db = createDBInstance(folderPath);
-const kanbanDB = new KanbanDB(db);
+  // SDK 1.25 tool/prompt have deep generics causing TS2589; use any at call sites
+  const tool = mcpServer.tool.bind(mcpServer) as (...args: unknown[]) => void;
+  const prompt = mcpServer.prompt.bind(mcpServer) as (...args: unknown[]) => void;
 
-mcpServer.tool(
-  "create-kanban-board",
-  "Create a new kanban board to plan and keep track of your tasks. Specify the goal of the project in 1-3 sentences.",
-  { name: z.string(), projectGoal: z.string() },
-  async ({ name, projectGoal }) => {
+  tool(
+    "create-kanban-board",
+    "Create a new kanban board to plan and keep track of your tasks. Specify the goal of the project in 1-3 sentences.",
+    { name: z.string(), projectGoal: z.string() },
+    async ({ name, projectGoal }: { name: string; projectGoal: string }) => {
     const columns = [
       { name: "On Hold", position: 0, wipLimit: 0 }, // 0 means unlimited
       { name: "To Do", position: 1, wipLimit: 0 },
@@ -56,15 +61,15 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "add-task-to-board",
+  tool(
+    "add-task-to-board",
   "Add a new task to the landing column (to-do) of a kanban board. Provide a title and content for the task. The content is a markdown string that should include a short description of what needs to be done, why it needs to be done, as well as acceptance criteria.",
   {
     boardId: z.string(),
     title: z.string(),
     content: z.string(),
   },
-  async ({ boardId, title, content }) => {
+  async ({ boardId, title, content }: { boardId: string; title: string; content: string }) => {
     const board = kanbanDB.getBoardById(boardId);
 
     if (!board) {
@@ -154,15 +159,15 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "move-task",
+  tool(
+    "move-task",
   "Move a task from one column to another, respecting WIP limits. Only move tasks into the Done column if the user approved that the task is done. When moving to Done, provide a short reason for completion.",
   {
     taskId: z.string(),
     targetColumnId: z.string(),
     reason: z.string().optional(),
   },
-  async ({ taskId, targetColumnId, reason }) => {
+  async ({ taskId, targetColumnId, reason }: { taskId: string; targetColumnId: string; reason?: string }) => {
     const task = kanbanDB.getTaskById(taskId);
 
     if (!task) {
@@ -258,13 +263,13 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "delete-task",
+  tool(
+    "delete-task",
   "Delete a task from a kanban board.",
   {
     taskId: z.string(),
   },
-  async ({ taskId }) => {
+  async ({ taskId }: { taskId: string }) => {
     const changes = kanbanDB.deleteTask(taskId);
     if (changes) {
       return {
@@ -288,13 +293,13 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "get-board-info",
+  tool(
+    "get-board-info",
   "Get the full info of a kanban board, including columns and tasks (without task content).",
   {
     boardId: z.string(),
   },
-  async ({ boardId }) => {
+  async ({ boardId }: { boardId: string }) => {
     const boardData = kanbanDB.getBoardWithColumnsAndTasks(boardId);
 
     if (!boardData) {
@@ -369,13 +374,13 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "get-task-info",
+  tool(
+    "get-task-info",
   "Get the full info of a task, including its content.",
   {
     taskId: z.string(),
   },
-  async ({ taskId }) => {
+  async ({ taskId }: { taskId: string }) => {
     const task = kanbanDB.getTaskById(taskId);
 
     if (!task) {
@@ -407,8 +412,8 @@ mcpServer.tool(
   }
 );
 
-mcpServer.tool(
-  "list-boards",
+  tool(
+    "list-boards",
   "List all kanban boards in the database: Name, creation time, and goal.",
   {},
   async () => {
@@ -450,10 +455,10 @@ mcpServer.tool(
   }
 );
 
-mcpServer.prompt(
-  "create-kanban-based-project",
+  prompt(
+    "create-kanban-based-project",
   { description: z.string() },
-  ({ description }) => ({
+  ({ description }: { description: string }) => ({
     messages: [
       {
         role: "user",
@@ -474,16 +479,16 @@ mcpServer.prompt(
   })
 );
 
-mcpServer.prompt(
-  "make-progress-on-a-project",
-  { project: z.string() },
-  ({ project }) => ({
-    messages: [
-      {
-        role: "user",
-        content: {
-          type: "text",
-          text: `
+  prompt(
+    "make-progress-on-a-project",
+    { project: z.string() },
+    ({ project }: { project: string }) => ({
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text: `
         Let's make progress on the following project:\n\n${project}\n\n
         Locate the kanban project in the list of boards. If it doesn't exist, tell me before creating one.
         After you located the correct board, get its info and pick the next task to work on.
@@ -492,44 +497,54 @@ mcpServer.prompt(
         that by yourself, ask me if they are met.
         If you can't make progress, tell me why. 
         `,
+          },
         },
-      },
-    ],
-  })
-);
+      ],
+    })
+  );
 
-const transport = new StdioServerTransport();
-mcpServer
-  .connect(transport)
-  .then(() => {
-    console.error("MCP Server running on stdio");
-  })
-  .catch((err) => {
-    console.error("MCP Server connection error", err);
-    process.exit(1);
-  });
-
-async function closeServer() {
-  console.error("Closing MCP Server");
-  await mcpServer.close();
-  kanbanDB.close();
+  return mcpServer;
 }
 
-process.stdin.on("close", async () => {
-  console.error("MCP Server closed");
-  await closeServer();
-  process.exit(0);
-});
+// Stdio entry point (local / Docker run). Skip when loaded by server-sse.
+if (!process.env.MCP_SSE) {
+  const folderPath = process.env.MCP_KANBAN_DB_FOLDER_PATH ?? "./db";
+  const db = createDBInstance(folderPath);
+  const kanbanDB = new KanbanDB(db);
+  const mcpServer = createMcpServer(kanbanDB);
 
-// Handle graceful shutdown
-process.on("SIGINT", async () => {
-  console.error("Shutting down servers...");
-  await closeServer;
-  process.exit(0);
-});
+  const transport = new StdioServerTransport();
+  mcpServer
+    .connect(transport)
+    .then(() => {
+      console.error("MCP Server running on stdio");
+    })
+    .catch((err) => {
+      console.error("MCP Server connection error", err);
+      process.exit(1);
+    });
 
-process.on("SIGTERM", async () => {
-  console.error("Shutting down servers...");
-  await closeServer();
-  process.exit(0);
-});
+  async function closeServer() {
+    console.error("Closing MCP Server");
+    await mcpServer.close();
+    kanbanDB.close();
+  }
+
+  process.stdin.on("close", async () => {
+    console.error("MCP Server closed");
+    await closeServer();
+    process.exit(0);
+  });
+
+  process.on("SIGINT", async () => {
+    console.error("Shutting down servers...");
+    await closeServer();
+    process.exit(0);
+  });
+
+  process.on("SIGTERM", async () => {
+    console.error("Shutting down servers...");
+    await closeServer();
+    process.exit(0);
+  });
+}
