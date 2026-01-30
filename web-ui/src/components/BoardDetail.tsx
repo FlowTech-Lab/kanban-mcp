@@ -6,6 +6,7 @@ import Column from "./Column";
 import TaskDetail from "./TaskDetail";
 import { DragAndDropProvider } from "../contexts/DragAndDropContext";
 import { useNotifications } from "./NotificationContainer";
+import type { ColumnWithTasks, TaskSummary } from "../types";
 
 export default function BoardDetail() {
   const { boardId } = useParams<{ boardId: string }>();
@@ -33,7 +34,7 @@ export default function BoardDetail() {
 
     for (const column of data.columns) {
       const taskIndex = column.tasks.findIndex(
-        (task) => task.id === selectedTaskId
+        (task: TaskSummary) => task.id === selectedTaskId
       );
       if (taskIndex !== -1) {
         return { column, taskIndex };
@@ -77,8 +78,8 @@ export default function BoardDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="flex justify-center items-center h-64" role="status" aria-label="Loading board">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-400" aria-hidden />
       </div>
     );
   }
@@ -124,7 +125,7 @@ export default function BoardDetail() {
 
   if (error || !data) {
     return (
-      <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mb-4 backdrop-blur-sm">
         <div className="flex">
           <div className="flex-shrink-0">
             <svg
@@ -140,14 +141,14 @@ export default function BoardDetail() {
             </svg>
           </div>
           <div className="ml-3">
-            <p className="text-sm text-red-700">
+            <p className="text-sm text-red-200">
               Error loading board:{" "}
               {error instanceof Error ? error.message : "Board not found"}
             </p>
             <div className="mt-2">
               <Link
                 to="/boards"
-                className="text-sm font-medium text-red-700 hover:text-red-600"
+                className="text-sm font-medium text-red-300 hover:text-red-200"
               >
                 Go back to boards list
               </Link>
@@ -162,15 +163,15 @@ export default function BoardDetail() {
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="glass-panel mb-6 rounded-xl border border-white/10 bg-white/5 p-4 shadow-glass">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{board.name}</h2>
-            <p className="mt-1 text-base text-gray-700">{board.goal}</p>
+            <h2 className="text-2xl font-bold text-white">{board.name}</h2>
+            <p className="mt-1 text-base text-slate-300">{board.goal}</p>
           </div>
           <Link
             to="/boards"
-            className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white whitespace-nowrap shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="ml-6 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white whitespace-nowrap shadow-glass hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             Back to Boards
           </Link>
@@ -180,7 +181,7 @@ export default function BoardDetail() {
       <div className="overflow-visible pb-6">
         <DragAndDropProvider onMoveTask={handleMoveTask}>
           <div className="flex gap-4 min-w-max">
-            {columns.map((column) => (
+            {columns.map((column: ColumnWithTasks) => (
               <div key={column.id} className="w-[280px]">
                 <Column column={column} onTaskClick={handleTaskClick} />
               </div>

@@ -20,20 +20,20 @@ export default function Column({ column, onTaskClick }: ColumnProps) {
   });
   
   // Apply styles when a task is being dragged over this column
-  const dropIndicatorStyle = isOver ? 'border-2 border-dashed border-indigo-500 bg-indigo-50' : '';
+  const dropIndicatorStyle = isOver ? 'border-2 border-dashed border-indigo-400 bg-indigo-500/20' : '';
   return (
     <div 
       ref={setNodeRef}
-      className={`flex flex-col border-b border-gray-900/5 bg-gray-50 rounded-md shadow p-2 min-w-[250px] transition-colors ${isDragging ? dropIndicatorStyle : ''}`}
+      className={`glass-panel flex flex-col rounded-xl border border-white/10 bg-white/5 p-3 min-w-[250px] shadow-glass transition-colors ${isDragging ? dropIndicatorStyle : ''}`}
     >
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium text-gray-900">{column.name}</h3>
+        <h3 className="text-sm font-medium text-white">{column.name}</h3>
         <div className="flex items-center">
-          <span className="inline-flex items-center rounded-full bg-gray-200 px-2 py-1 text-xs font-medium text-gray-800">
+          <span className="inline-flex items-center rounded-full bg-white/15 px-2 py-1 text-xs font-medium text-slate-200">
             {column.tasks.length} {column.wipLimit > 0 ? `/ ${column.wipLimit}` : ''}
           </span>
           {column.isLanding && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+            <span className="ml-2 inline-flex items-center rounded-full bg-indigo-500/30 px-2 py-1 text-xs font-medium text-indigo-200">
               Landing
             </span>
           )}
@@ -41,7 +41,7 @@ export default function Column({ column, onTaskClick }: ColumnProps) {
       </div>
       <div className="overflow-visible flex-1">
         {column.tasks.length === 0 ? (
-          <div className={`p-4 text-center text-sm text-gray-500 ${isOver ? 'bg-indigo-100 rounded-md' : ''}`}>
+          <div className={`rounded-lg p-4 text-center text-sm text-slate-400 ${isOver ? 'bg-indigo-500/15 text-indigo-200' : ''}`}>
             {isOver ? 'Drop here' : 'No tasks'}
           </div>
         ) : (

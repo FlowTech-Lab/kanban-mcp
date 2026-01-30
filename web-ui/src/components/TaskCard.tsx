@@ -34,13 +34,13 @@ export default function TaskCard({ task, column, isMoving = false }: TaskCardPro
       {...listeners}
       {...attributes}
       style={style}
-      className={`bg-white shadow rounded-md p-3 cursor-pointer hover:shadow-md transition-all touch-manipulation ${
-        isMoving ? 'ring-2 ring-indigo-500 animate-pulse' : ''
+      className={`glass-panel rounded-lg border border-white/10 bg-white/5 p-3 cursor-pointer shadow-glass hover:bg-white/10 hover:border-white/15 transition-all touch-manipulation ${
+        isMoving ? 'ring-2 ring-indigo-400 animate-pulse' : ''
       } ${isDragging ? 'opacity-50' : ''}`}
     >
-      <h4 className="text-sm font-medium text-gray-900 truncate">{task.title}</h4>
+      <h4 className="text-sm font-medium text-white truncate">{task.title}</h4>
       <div className="mt-2 flex justify-between items-center">
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-slate-400">
           {new Date(task.updatedAt).toLocaleDateString()}
         </span>
       </div>

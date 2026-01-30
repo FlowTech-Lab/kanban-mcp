@@ -3,7 +3,12 @@
   line-height: 1.6;
 }
 
-/* Headings */
+/* Headings – dark theme */
+.markdown-content h1, .markdown-content h2, .markdown-content h3,
+.markdown-content h4, .markdown-content h5, .markdown-content h6 {
+  color: rgb(241 245 249);
+}
+
 .markdown-content h1 {
   font-size: 1.8em;
   margin-top: 1em;
@@ -39,15 +44,17 @@
   font-weight: 600;
 }
 
-/* Paragraphs and spacing */
+/* Paragraphs and spacing – dark theme */
 .markdown-content p {
   margin-bottom: 1em;
+  color: rgb(203 213 225);
 }
 
-/* Lists */
+/* Lists – dark theme */
 .markdown-content ul, .markdown-content ol {
   margin-bottom: 1em;
   padding-left: 2em;
+  color: rgb(203 213 225);
 }
 
 .markdown-content ul {
@@ -62,50 +69,54 @@
   margin-bottom: 0.5em;
 }
 
-/* Blockquotes */
+/* Blockquotes – dark glass theme */
 .markdown-content blockquote {
-  border-left: 4px solid #e5e7eb;
+  border-left: 4px solid rgba(148, 163, 184, 0.4);
   padding-left: 1em;
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 1em;
-  color: #6b7280;
+  color: rgb(148 163 184);
 }
 
-/* Code blocks */
+/* Code blocks – dark glass theme */
 .markdown-content pre {
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
+  background-color: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
   padding: 1em;
   overflow-x: auto;
   margin-bottom: 1em;
 }
 
 .markdown-content code {
-  background-color: #f3f4f6;
+  background-color: rgba(255, 255, 255, 0.08);
   border-radius: 0.25rem;
   padding: 0.2em 0.4em;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875em;
+  color: rgb(226 232 240);
 }
 
 .markdown-content pre code {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
+  color: rgb(226 232 240);
 }
 
-/* Links */
+/* Links – dark theme */
 .markdown-content a {
-  color: #3b82f6;
+  color: rgb(129 140 248);
   text-decoration: underline;
 }
 
 .markdown-content a:hover {
+  color: rgb(165 180 252);
   text-decoration: none;
 }
 
-/* Tables */
+/* Tables – dark glass theme */
 .markdown-content table {
   border-collapse: collapse;
   width: 100%;
@@ -113,19 +124,24 @@
 }
 
 .markdown-content th, .markdown-content td {
-  border: 1px solid #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0.5em;
 }
 
 .markdown-content th {
-  background-color: #f9fafb;
+  background-color: rgba(255, 255, 255, 0.06);
   font-weight: 600;
+  color: rgb(241 245 249);
+}
+
+.markdown-content td {
+  color: rgb(203 213 225);
 }
 
 /* Horizontal rule */
 .markdown-content hr {
   border: 0;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin: 1.5em 0;
 }
 
