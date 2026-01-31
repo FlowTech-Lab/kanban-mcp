@@ -140,6 +140,7 @@ In your MCP client (e.g. Cursor), add:
         "create-kanban-board",
         "add-task-to-board",
         "move-task",
+        "update-task",
         "delete-task",
         "get-board-info",
         "get-task-info",
@@ -209,6 +210,7 @@ See [docs/CURSOR_MCP_AND_USAGE.md](docs/CURSOR_MCP_AND_USAGE.md) for detailed co
 | **create-kanban-board** | Create a new board with default columns (On Hold, To Do, In Progress, Done). | `name`, `projectGoal` |
 | **add-task-to-board** | Add a task to the board’s landing column (To Do). Content is markdown. | `boardId`, `title`, `content` |
 | **move-task** | Move a task to another column; respects WIP limits. | `taskId`, `targetColumnId`, `reason` (optional) |
+| **update-task** | Update the markdown content of an existing task. | `taskId`, `content` |
 | **delete-task** | Delete a task. | `taskId` |
 | **get-board-info** | Return board metadata, columns, and tasks (no task body). | `boardId` |
 | **get-task-info** | Return full task including markdown content. | `taskId` |

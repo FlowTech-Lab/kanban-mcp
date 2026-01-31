@@ -87,6 +87,7 @@ Add to your MCP configuration (e.g. `~/.cursor/mcp.json`):
         "create-kanban-board",
         "add-task-to-board",
         "move-task",
+        "update-task",
         "delete-task",
         "get-board-info",
         "get-task-info",

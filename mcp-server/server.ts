@@ -19,7 +19,7 @@ dayjs.extend(relativeTime);
 export function createMcpServer(kanbanDB: KanbanDB): McpServer {
   const mcpServer = new McpServer({
     name: "KanbanMCP",
-    version: "1.1.0",
+    version: "1.2.0",
   });
 
   // SDK 1.25 tool/prompt have deep generics causing TS2589; use any at call sites
@@ -262,6 +262,62 @@ export function createMcpServer(kanbanDB: KanbanDB): McpServer {
     };
   }
 );
+
+  tool(
+    "update-task",
+    "Update the markdown content of an existing task. Use get-task-info first to retrieve the current content, then call this to save changes.",
+    {
+      taskId: z.string(),
+      content: z.string(),
+    },
+    async ({ taskId, content }: { taskId: string; content: string }) => {
+      const task = kanbanDB.getTaskById(taskId);
+
+      if (!task) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Could not find task with ID: ${taskId}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      const updatedTask = kanbanDB.updateTask(taskId, content);
+
+      if (!updatedTask) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Could not update task with ID: ${taskId}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Updated task "${updatedTask.title}" (ID: ${taskId}). Content has been saved.`,
+          },
+        ],
+        taskInfo: {
+          id: updatedTask.id,
+          columnId: updatedTask.column_id,
+          title: updatedTask.title,
+          content: updatedTask.content,
+          position: updatedTask.position,
+          createdAt: updatedTask.created_at,
+          updatedAt: updatedTask.updated_at,
+        },
+      };
+    }
+  );
 
   tool(
     "delete-task",
