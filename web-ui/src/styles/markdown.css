@@ -3,10 +3,10 @@
   line-height: 1.6;
 }
 
-/* Headings – dark theme */
+/* Headings – New York sombre */
 .markdown-content h1, .markdown-content h2, .markdown-content h3,
 .markdown-content h4, .markdown-content h5, .markdown-content h6 {
-  color: rgb(241 245 249);
+  color: var(--ny-text, #e5e5e5);
 }
 
 .markdown-content h1 {
@@ -44,17 +44,17 @@
   font-weight: 600;
 }
 
-/* Paragraphs and spacing – dark theme */
+/* Paragraphs and spacing – New York sombre */
 .markdown-content p {
   margin-bottom: 1em;
-  color: rgb(203 213 225);
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Lists – dark theme */
+/* Lists – New York sombre */
 .markdown-content ul, .markdown-content ol {
   margin-bottom: 1em;
   padding-left: 2em;
-  color: rgb(203 213 225);
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
 .markdown-content ul {
@@ -69,20 +69,20 @@
   margin-bottom: 0.5em;
 }
 
-/* Blockquotes – dark glass theme */
+/* Blockquotes – New York sombre */
 .markdown-content blockquote {
-  border-left: 4px solid rgba(148, 163, 184, 0.4);
+  border-left: 4px solid var(--ny-accent);
   padding-left: 1em;
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 1em;
-  color: rgb(148 163 184);
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Code blocks – dark glass theme */
+/* Code blocks – New York sombre */
 .markdown-content pre {
-  background-color: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--ny-surface, #141414);
+  border: 1px solid var(--ny-border, #2a2a2a);
   border-radius: 0.5rem;
   padding: 1em;
   overflow-x: auto;
@@ -90,33 +90,33 @@
 }
 
 .markdown-content code {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--ny-surface-elevated, #1c1c1c);
   border-radius: 0.25rem;
   padding: 0.2em 0.4em;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875em;
-  color: rgb(226 232 240);
+  color: var(--ny-text, #e5e5e5);
 }
 
 .markdown-content pre code {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
-  color: rgb(226 232 240);
+  color: var(--ny-text, #e5e5e5);
 }
 
-/* Links – dark theme */
+/* Links – New York sombre (accent doré) */
 .markdown-content a {
-  color: rgb(129 140 248);
+  color: var(--ny-accent, #c9a227);
   text-decoration: underline;
 }
 
 .markdown-content a:hover {
-  color: rgb(165 180 252);
+  color: var(--ny-accent-hover, #d4af37);
   text-decoration: none;
 }
 
-/* Tables – dark glass theme */
+/* Tables – New York sombre */
 .markdown-content table {
   border-collapse: collapse;
   width: 100%;
@@ -124,24 +124,24 @@
 }
 
 .markdown-content th, .markdown-content td {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--ny-border, #2a2a2a);
   padding: 0.5em;
 }
 
 .markdown-content th {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--ny-surface, #141414);
   font-weight: 600;
-  color: rgb(241 245 249);
+  color: var(--ny-text, #e5e5e5);
 }
 
 .markdown-content td {
-  color: rgb(203 213 225);
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
 /* Horizontal rule */
 .markdown-content hr {
   border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--ny-border, #2a2a2a);
   margin: 1.5em 0;
 }
 

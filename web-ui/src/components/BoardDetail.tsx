@@ -79,7 +79,7 @@ export default function BoardDetail() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64" role="status" aria-label="Loading board">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-400" aria-hidden />
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ny-accent" aria-hidden />
       </div>
     );
   }
@@ -126,12 +126,13 @@ export default function BoardDetail() {
   if (error || !data) {
     return (
       <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mb-4 backdrop-blur-sm">
-        <div className="flex">
+        <div className="flex gap-3">
           <div className="flex-shrink-0">
             <svg
               className="h-5 w-5 text-red-400"
               viewBox="0 0 20 20"
               fill="currentColor"
+              aria-hidden
             >
               <path
                 fillRule="evenodd"
@@ -140,7 +141,7 @@ export default function BoardDetail() {
               />
             </svg>
           </div>
-          <div className="ml-3">
+          <div className="min-w-0 flex-1">
             <p className="text-sm text-red-200">
               Error loading board:{" "}
               {error instanceof Error ? error.message : "Board not found"}
@@ -162,27 +163,27 @@ export default function BoardDetail() {
   const { board, columns } = data;
 
   return (
-    <div>
-      <div className="glass-panel mb-6 rounded-xl border border-white/10 bg-white/5 p-4 shadow-glass">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-white">{board.name}</h2>
-            <p className="mt-1 text-base text-slate-300">{board.goal}</p>
+    <div className="min-w-0">
+      <div className="glass-panel mb-4 rounded-xl border border-ny-border bg-ny-surface/60 p-4 shadow-glass sm:mb-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-editorial text-xl font-semibold text-ny-text break-words sm:text-2xl">{board.name}</h2>
+            <p className="mt-1 text-sm text-ny-text-muted line-clamp-2 sm:line-clamp-none sm:text-base">{board.goal}</p>
           </div>
           <Link
             to="/boards"
-            className="ml-6 rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm font-semibold text-white whitespace-nowrap shadow-glass hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            className="shrink-0 rounded-lg border border-ny-border bg-ny-surface-elevated px-3 py-2 text-sm font-medium text-ny-text shadow-glass hover:bg-ny-accent-muted hover:border-ny-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ny-accent"
           >
             Back to Boards
           </Link>
         </div>
       </div>
 
-      <div className="overflow-visible pb-6">
+      <div className="-mx-3 overflow-x-auto scroll-board pb-6 sm:mx-0">
         <DragAndDropProvider onMoveTask={handleMoveTask}>
-          <div className="flex gap-4 min-w-max">
+          <div className="flex gap-3 min-w-max px-3 pb-2 sm:gap-4 sm:px-0 sm:pb-0">
             {columns.map((column: ColumnWithTasks) => (
-              <div key={column.id} className="w-[280px]">
+              <div key={column.id} className="w-[min(280px,85vw)] min-w-[260px] sm:w-[280px]">
                 <Column column={column} onTaskClick={handleTaskClick} />
               </div>
             ))}

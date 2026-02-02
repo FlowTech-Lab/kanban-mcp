@@ -49,9 +49,9 @@ export default function Notification({
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <div className="glass-panel pointer-events-auto w-full max-w-sm overflow-hidden rounded-xl border border-white/10 bg-white/10 shadow-glass-lg">
+      <div className="glass-panel pointer-events-auto w-full max-w-sm overflow-hidden rounded-xl border border-ny-border bg-ny-surface shadow-glass-lg">
         <div className="p-4">
-          <div className="flex items-start">
+          <div className="flex items-start gap-3">
             <div className="shrink-0">
               {type === 'success' ? (
                 <CheckCircleIcon className="h-6 w-6 text-emerald-400" aria-hidden="true" />
@@ -59,15 +59,15 @@ export default function Notification({
                 <ExclamationCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
               )}
             </div>
-            <div className="ml-3 w-0 flex-1 pt-0.5">
-              <p className="text-sm font-medium text-white">{message}</p>
-              {description && <p className="mt-1 text-sm text-slate-300">{description}</p>}
+            <div className="min-w-0 flex-1 pt-0.5">
+              <p className="text-sm font-medium text-ny-text">{message}</p>
+              {description && <p className="mt-1 text-sm text-ny-text-muted">{description}</p>}
             </div>
-            <div className="ml-4 flex shrink-0">
+            <div className="flex shrink-0">
               <button
                 type="button"
                 onClick={handleClose}
-                className="inline-flex rounded-lg bg-white/10 text-slate-400 hover:text-white hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-slate-900"
+                className="inline-flex rounded-lg bg-ny-surface-elevated text-ny-text-muted hover:text-ny-text hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg"
               >
                 <span className="sr-only">Close</span>
                 <XMarkIcon className="h-5 w-5" aria-hidden="true" />

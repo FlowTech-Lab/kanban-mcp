@@ -41,7 +41,7 @@ export default function BoardList() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64" role="status" aria-label="Loading boards">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-400" aria-hidden />
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ny-accent" aria-hidden />
       </div>
     );
   }
@@ -66,51 +66,53 @@ export default function BoardList() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="min-w-0 px-0 sm:px-2">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h1 className="text-base font-semibold text-white">Kanban Boards</h1>
+          <h1 className="font-editorial text-lg font-semibold text-ny-text sm:text-xl">Kanban Boards</h1>
         </div>
       </div>
-      <div className="mt-8 flow-root">
-        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <div className="glass-panel overflow-hidden rounded-xl border border-white/10 bg-white/5 px-6 py-5 shadow-glass sm:px-8">
-              <table className="min-w-full divide-y divide-white/10">
+      <div className="mt-4 flow-root sm:mt-6">
+        <div className="overflow-x-auto scroll-board -mx-3 sm:mx-0">
+          <div className="inline-block min-w-full py-2 align-middle">
+            <div className="glass-panel overflow-hidden rounded-xl border border-ny-border bg-ny-surface/60 px-3 py-4 shadow-glass sm:px-6 sm:py-5">
+              <table className="min-w-[640px] w-full divide-y divide-ny-border">
                 <thead>
                   <tr>
-                    <th scope="col" className="py-5 pl-5 pr-4 text-left text-sm font-semibold text-slate-200">
+                    <th scope="col" className="py-4 pl-3 pr-2 text-left text-sm font-semibold text-ny-text sm:pl-5 sm:pr-4 sm:py-5">
                       Name
                     </th>
-                    <th scope="col" className="px-5 py-5 text-left text-sm font-semibold text-slate-200">
+                    <th scope="col" className="px-2 py-4 text-left text-sm font-semibold text-ny-text sm:px-5 sm:py-5">
                       Goal
                     </th>
-                    <th scope="col" className="px-5 py-5 text-left text-sm font-semibold text-slate-200">
+                    <th scope="col" className="hidden px-2 py-4 text-left text-sm font-semibold text-ny-text-muted md:table-cell sm:px-5 sm:py-5">
                       Created At
                     </th>
-                    <th scope="col" className="px-5 py-5 text-left text-sm font-semibold text-slate-200">
+                    <th scope="col" className="hidden px-2 py-4 text-left text-sm font-semibold text-ny-text-muted lg:table-cell sm:px-5 sm:py-5">
                       Updated At
                     </th>
-                    <th scope="col" className="relative py-5 pl-4 pr-5 text-right">
+                    <th scope="col" className="relative w-28 py-4 pl-2 pr-3 text-right sm:py-5 sm:pl-4 sm:pr-5">
                       <span className="sr-only">Actions</span>
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/10">
+                <tbody className="divide-y divide-ny-border">
                   {boards?.map((board: Board) => (
-                    <tr key={board.id} className="hover:bg-white/5 transition-colors">
-                      <td className="whitespace-nowrap py-5 pl-5 pr-4 text-sm font-medium text-white">
-                        {board.name}
+                    <tr key={board.id} className="hover:bg-ny-surface-elevated/50 transition-colors">
+                      <td className="py-4 pl-3 pr-2 text-sm font-medium text-ny-text sm:py-5 sm:pl-5 sm:pr-4">
+                        <span className="truncate block">{board.name}</span>
                       </td>
-                      <td className="px-5 py-5 text-sm text-slate-400 max-w-[200px] overflow-hidden text-ellipsis">{board.goal}</td>
-                      <td className="whitespace-nowrap px-5 py-5 text-sm text-slate-400">
+                      <td className="px-2 py-4 text-sm text-ny-text-muted sm:px-5 sm:py-5">
+                        <span className="line-clamp-2 sm:line-clamp-1">{board.goal}</span>
+                      </td>
+                      <td className="hidden px-2 py-4 text-sm text-ny-text-muted md:table-cell sm:px-5 sm:py-5">
                         {new Date(board.created_at).toLocaleString()}
                       </td>
-                      <td className="whitespace-nowrap px-5 py-5 text-sm text-slate-400">
+                      <td className="hidden px-2 py-4 text-sm text-ny-text-muted lg:table-cell sm:px-5 sm:py-5">
                         {new Date(board.updated_at).toLocaleString()}
                       </td>
-                      <td className="relative whitespace-nowrap py-5 pl-4 pr-5 text-right text-sm font-medium">
-                        <Link to={`/boards/${board.id}`} className="text-indigo-400 hover:text-indigo-300 mr-4">
+                      <td className="relative whitespace-nowrap py-4 pl-2 pr-3 text-right text-sm font-medium sm:py-5 sm:pl-4 sm:pr-5">
+                        <Link to={`/boards/${board.id}`} className="text-ny-accent hover:text-ny-accent-hover mr-2 sm:mr-4">
                           View<span className="sr-only">, {board.name}</span>
                         </Link>
                         <button
@@ -138,22 +140,22 @@ export default function BoardList() {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
         
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="glass-panel-xl mx-auto max-w-sm rounded-xl border border-white/10 bg-white/10 p-6 shadow-glass-lg">
-            <DialogTitle className="text-lg font-medium text-white">
+          <DialogPanel className="glass-panel-xl mx-auto max-w-sm rounded-xl border border-ny-border bg-ny-surface p-6 shadow-glass-lg">
+            <DialogTitle className="font-editorial text-lg font-semibold text-ny-text">
               Delete Board
             </DialogTitle>
             
             <div className="mt-2">
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-ny-text-muted">
                 Are you sure you want to delete the board "{boardToDelete?.name}"? 
                 This action cannot be undone and all tasks will be permanently deleted.
               </p>
             </div>
 
-            <div className="mt-4 flex justify-end space-x-3">
+            <div className="mt-4 flex justify-end gap-3">
               <button
                 type="button"
-                className="inline-flex justify-center rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-slate-200 hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                className="inline-flex justify-center rounded-lg border border-ny-border bg-ny-surface-elevated px-4 py-2 text-sm font-medium text-ny-text hover:bg-ny-accent-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-ny-accent focus-visible:ring-offset-2 focus-visible:ring-offset-ny-bg"
                 onClick={() => setIsDeleteDialogOpen(false)}
                 disabled={isDeleting}
               >
@@ -161,7 +163,7 @@ export default function BoardList() {
               </button>
               <button
                 type="button"
-                className="inline-flex justify-center rounded-lg border border-transparent bg-red-500/80 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
+                className="inline-flex justify-center rounded-lg border border-transparent bg-red-500/80 px-4 py-2 text-sm font-medium text-white hover:bg-red-500 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 focus-visible:ring-offset-ny-bg"
                 onClick={handleConfirmDelete}
                 disabled={isDeleting}
               >
