@@ -3,7 +3,7 @@
   line-height: 1.6;
 }
 
-/* Headings – New York sombre */
+/* Headings – New York dark */
 .markdown-content h1, .markdown-content h2, .markdown-content h3,
 .markdown-content h4, .markdown-content h5, .markdown-content h6 {
   color: var(--ny-text, #e5e5e5);
@@ -44,13 +44,13 @@
   font-weight: 600;
 }
 
-/* Paragraphs and spacing – New York sombre */
+/* Paragraphs and spacing – New York dark */
 .markdown-content p {
   margin-bottom: 1em;
   color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Lists – New York sombre */
+/* Lists – New York dark */
 .markdown-content ul, .markdown-content ol {
   margin-bottom: 1em;
   padding-left: 2em;
@@ -69,7 +69,7 @@
   margin-bottom: 0.5em;
 }
 
-/* Blockquotes – New York sombre */
+/* Blockquotes – New York dark */
 .markdown-content blockquote {
   border-left: 4px solid var(--ny-accent);
   padding-left: 1em;
@@ -79,7 +79,7 @@
   color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Code blocks – New York sombre */
+/* Code blocks – New York dark */
 .markdown-content pre {
   background-color: var(--ny-surface, #141414);
   border: 1px solid var(--ny-border, #2a2a2a);
@@ -105,7 +105,7 @@
   color: var(--ny-text, #e5e5e5);
 }
 
-/* Links – New York sombre (accent doré) */
+/* Links – New York dark (gold accent) */
 .markdown-content a {
   color: var(--ny-accent, #c9a227);
   text-decoration: underline;
@@ -116,7 +116,7 @@
   text-decoration: none;
 }
 
-/* Tables – New York sombre */
+/* Tables – New York dark */
 .markdown-content table {
   border-collapse: collapse;
   width: 100%;

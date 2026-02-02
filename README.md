@@ -6,7 +6,7 @@ An MCP (Model Context Protocol) tool set providing kanban-based task management 
 
 - Column capacity and work-in-progress (WIP) limits
 - Embedded SQLite database; no external DB required
-- Web UI (React, Tailwind CSS) for viewing and editing boards and tasks
+- Web UI (React, Tailwind CSS) for viewing and editing boards and tasks — responsive (mobile and narrow desktop), New York dark theme
 - Predefined MCP prompts for starting and resuming workflows
 - **Global deployment**: MCP server over SSE/Streamable HTTP for remote clients (e.g. Cursor from any machine)
 - **Docker Compose**: Web UI, API, and MCP SSE server in one stack with a shared database
@@ -32,7 +32,7 @@ The same database can be used by the Web UI and the MCP server so that boards ar
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 18+ (Node 20+ recommended for Web UI; required for React Router 7)
 - npm
 
 ### Local build (stdio or SSE from host)
@@ -127,6 +127,12 @@ This starts:
 
 Both services use the same volume `./data` for the SQLite database.
 
+**After changing the Web UI** (responsive, theme, etc.), rebuild the web image so the container serves the new build:
+
+```sh
+docker compose build --no-cache web && docker compose up -d web
+```
+
 In your MCP client (e.g. Cursor), add:
 
 ```json
@@ -171,6 +177,8 @@ Then configure the MCP client with `type: "sse"` and `url: "http://<host>:8222/s
 ---
 
 ## Web UI
+
+The Web UI is responsive: boards scroll horizontally on narrow viewports (mobile or reduced desktop window); vertical scroll is available where needed.
 
 ### With Docker Compose
 

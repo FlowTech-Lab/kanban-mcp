@@ -163,27 +163,28 @@ export default function BoardDetail() {
   const { board, columns } = data;
 
   return (
-    <div className="min-w-0">
-      <div className="glass-panel mb-4 rounded-xl border border-ny-border bg-ny-surface/60 p-4 shadow-glass sm:mb-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="min-w-0 w-full">
+      <div className="glass-panel mb-4 rounded-xl border border-ny-border bg-ny-surface/60 p-3 shadow-glass sm:mb-6 sm:p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
           <div className="min-w-0 flex-1">
-            <h2 className="font-editorial text-xl font-semibold text-ny-text break-words sm:text-2xl">{board.name}</h2>
-            <p className="mt-1 text-sm text-ny-text-muted line-clamp-2 sm:line-clamp-none sm:text-base">{board.goal}</p>
+            <h2 className="font-editorial text-lg font-semibold text-ny-text break-words sm:text-xl md:text-2xl">{board.name}</h2>
+            <p className="mt-1 text-xs text-ny-text-muted line-clamp-2 sm:line-clamp-none sm:text-sm md:text-base">{board.goal}</p>
           </div>
           <Link
             to="/boards"
-            className="shrink-0 rounded-lg border border-ny-border bg-ny-surface-elevated px-3 py-2 text-sm font-medium text-ny-text shadow-glass hover:bg-ny-accent-muted hover:border-ny-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ny-accent"
+            className="shrink-0 self-start rounded-lg border border-ny-border bg-ny-surface-elevated px-3 py-2 text-sm font-medium text-ny-text shadow-glass hover:bg-ny-accent-muted hover:border-ny-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ny-accent"
           >
             Back to Boards
           </Link>
         </div>
       </div>
 
-      <div className="-mx-3 overflow-x-auto scroll-board pb-6 sm:mx-0">
+      {/* Horizontal scroll area – explicit flex, left-aligned (narrow desktop + mobile) */}
+      <div className="scroll-board -mx-3 w-full max-w-full overflow-x-auto pb-4 sm:mx-0 sm:pb-6">
         <DragAndDropProvider onMoveTask={handleMoveTask}>
-          <div className="flex gap-3 min-w-max px-3 pb-2 sm:gap-4 sm:px-0 sm:pb-0">
+          <div className="flex flex-row flex-nowrap justify-start items-stretch gap-3 min-w-max px-3 pb-2 sm:gap-4 sm:px-0 sm:pb-0">
             {columns.map((column: ColumnWithTasks) => (
-              <div key={column.id} className="w-[min(280px,85vw)] min-w-[260px] sm:w-[280px]">
+              <div key={column.id} className="w-[240px] min-w-[240px] sm:w-[260px] sm:min-w-[260px] md:w-[280px] md:min-w-[280px]">
                 <Column column={column} onTaskClick={handleTaskClick} />
               </div>
             ))}

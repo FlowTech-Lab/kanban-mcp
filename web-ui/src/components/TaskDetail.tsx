@@ -75,7 +75,7 @@ export default function TaskDetail({
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-0 sm:pl-10 md:pl-16">
-            <DialogPanel className="pointer-events-auto w-screen max-w-2xl transform transition duration-500 ease-in-out sm:max-w-xl md:max-w-2xl">
+            <DialogPanel className="pointer-events-auto w-full max-w-full min-w-0 transform transition duration-500 ease-in-out sm:w-screen sm:max-w-xl md:max-w-2xl">
               <div className="glass-panel-xl flex h-full flex-col overflow-y-auto rounded-none sm:rounded-l-xl border-l border-ny-border bg-ny-surface py-4 shadow-glass-lg sm:py-6">
                 <div className="px-4 sm:px-6">
                   <div className="flex items-start justify-between gap-3">
