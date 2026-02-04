@@ -47,5 +47,6 @@ dist
 
 .DS_Store
 
-# Embedded DB:
+# Embedded DB
 db2
+data/

@@ -28,16 +28,24 @@ const DragAndDropContext = createContext<DragAndDropContextType | undefined>(
 // Define the props for our provider component
 interface DragAndDropProviderProps {
   children: ReactNode;
+  columns: ColumnWithTasks[];
   onMoveTask?: (
     taskId: string,
     sourceColumnId: string,
     destinationColumnId: string
   ) => Promise<void>;
+  onReorderTask?: (
+    taskId: string,
+    columnId: string,
+    position: number
+  ) => Promise<void>;
 }
 
 export function DragAndDropProvider({
   children,
+  columns,
   onMoveTask,
+  onReorderTask,
 }: DragAndDropProviderProps) {
   const [isDragging, setIsDragging] = useState(false);
 
@@ -50,12 +58,19 @@ export function DragAndDropProvider({
     })
   );
 
-  // Memoized handler for when a drag operation starts
+  const columnIds = useMemo(() => new Set(columns.map((c) => c.id)), [columns]);
+  const taskToColumn = useMemo(() => {
+    const map = new Map<string, { column: ColumnWithTasks; index: number }>();
+    for (const col of columns) {
+      col.tasks.forEach((t, i) => map.set(t.id, { column: col, index: i }));
+    }
+    return map;
+  }, [columns]);
+
   const handleDragStart = useCallback(() => {
     setIsDragging(true);
   }, []);
 
-  // Memoized handler for when a drag operation ends
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
       const { active, over } = event;
@@ -67,22 +82,37 @@ export function DragAndDropProvider({
 
       const task = active.data.current.task as TaskSummary;
       const sourceColumn = active.data.current.sourceColumn as ColumnWithTasks;
-      const destinationColumnId = over.id as string;
+      const overId = over.id as string;
 
-      // If the task was dropped in a different column
-      if (destinationColumnId !== sourceColumn.id) {
-        if (onMoveTask) {
-          onMoveTask(task.id, sourceColumn.id, destinationColumnId).catch(
-            (error) => {
-              console.error("Failed to move task:", error);
-            }
+      if (columnIds.has(overId)) {
+        // Dropped on a column (e.g. empty area) -> move to column
+        if (overId !== sourceColumn.id && onMoveTask) {
+          onMoveTask(task.id, sourceColumn.id, overId).catch((err) =>
+            console.error("Failed to move task:", err)
           );
+        }
+      } else {
+        // Dropped on a task
+        const target = taskToColumn.get(overId);
+        if (target) {
+          if (target.column.id === sourceColumn.id) {
+            // Same column -> reorder
+            if (onReorderTask) {
+              onReorderTask(task.id, sourceColumn.id, target.index).catch(
+                (err) => console.error("Failed to reorder task:", err)
+              );
+            }
+          } else if (onMoveTask) {
+            onMoveTask(task.id, sourceColumn.id, target.column.id).catch(
+              (err) => console.error("Failed to move task:", err)
+            );
+          }
         }
       }
 
       setIsDragging(false);
     },
-    [onMoveTask]
+    [columnIds, taskToColumn, onMoveTask, onReorderTask]
   );
 
   // Memoized context value to prevent unnecessary re-renders

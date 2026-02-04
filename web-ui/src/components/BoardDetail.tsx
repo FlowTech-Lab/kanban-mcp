@@ -1,11 +1,12 @@
 import { useState, useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getBoardWithColumnsAndTasks, moveTask } from "../services/api";
+import { getBoardWithColumnsAndTasks, moveTask, reorderTask } from "../services/api";
 import Column from "./Column";
 import TaskDetail from "./TaskDetail";
 import { DragAndDropProvider } from "../contexts/DragAndDropContext";
 import { useNotifications } from "./NotificationContainer";
+import type { ColumnWithTasks, TaskSummary } from "../types";
 
 export default function BoardDetail() {
   const { boardId } = useParams<{ boardId: string }>();
@@ -33,7 +34,7 @@ export default function BoardDetail() {
 
     for (const column of data.columns) {
       const taskIndex = column.tasks.findIndex(
-        (task) => task.id === selectedTaskId
+        (task: TaskSummary) => task.id === selectedTaskId
       );
       if (taskIndex !== -1) {
         return { column, taskIndex };
@@ -77,8 +78,8 @@ export default function BoardDetail() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="flex justify-center items-center h-64" role="status" aria-label="Loading board">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ny-accent" aria-hidden />
       </div>
     );
   }
@@ -122,15 +123,35 @@ export default function BoardDetail() {
     }
   };
 
+  const handleReorderTask = async (
+    taskId: string,
+    _columnId: string,
+    position: number
+  ) => {
+    try {
+      await reorderTask(taskId, position);
+      await queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+    } catch (error) {
+      console.error("Failed to reorder task:", error);
+      notifications.error(
+        "Failed to reorder task",
+        error instanceof Error ? error.message : "An unexpected error occurred."
+      );
+      queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+      return Promise.reject(error);
+    }
+  };
+
   if (error || !data) {
     return (
-      <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
-        <div className="flex">
+      <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mb-4 backdrop-blur-sm">
+        <div className="flex gap-3">
           <div className="flex-shrink-0">
             <svg
               className="h-5 w-5 text-red-400"
               viewBox="0 0 20 20"
               fill="currentColor"
+              aria-hidden
             >
               <path
                 fillRule="evenodd"
@@ -139,15 +160,15 @@ export default function BoardDetail() {
               />
             </svg>
           </div>
-          <div className="ml-3">
-            <p className="text-sm text-red-700">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-red-200">
               Error loading board:{" "}
               {error instanceof Error ? error.message : "Board not found"}
             </p>
             <div className="mt-2">
               <Link
                 to="/boards"
-                className="text-sm font-medium text-red-700 hover:text-red-600"
+                className="text-sm font-medium text-red-300 hover:text-red-200"
               >
                 Go back to boards list
               </Link>
@@ -161,27 +182,32 @@ export default function BoardDetail() {
   const { board, columns } = data;
 
   return (
-    <div>
-      <div className="mb-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">{board.name}</h2>
-            <p className="mt-1 text-base text-gray-700">{board.goal}</p>
+    <div className="min-w-0 w-full">
+      <div className="glass-panel mb-4 rounded-xl border border-ny-border bg-ny-surface/60 p-3 shadow-glass sm:mb-6 sm:p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <div className="min-w-0 flex-1">
+            <h2 className="font-editorial text-lg font-semibold text-ny-text break-words sm:text-xl md:text-2xl">{board.name}</h2>
+            <p className="mt-1 text-xs text-ny-text-muted line-clamp-2 sm:line-clamp-none sm:text-sm md:text-base">{board.goal}</p>
           </div>
           <Link
             to="/boards"
-            className="ml-6 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white whitespace-nowrap shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            className="shrink-0 self-start rounded-lg border border-ny-border bg-ny-surface-elevated px-3 py-2 text-sm font-medium text-ny-text shadow-glass hover:bg-ny-accent-muted hover:border-ny-accent/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ny-accent"
           >
             Back to Boards
           </Link>
         </div>
       </div>
 
-      <div className="overflow-visible pb-6">
-        <DragAndDropProvider onMoveTask={handleMoveTask}>
-          <div className="flex gap-4 min-w-max">
-            {columns.map((column) => (
-              <div key={column.id} className="w-[280px]">
+      {/* Horizontal scroll area – explicit flex, left-aligned (narrow desktop + mobile) */}
+      <div className="scroll-board -mx-3 w-full max-w-full overflow-x-auto pb-4 sm:mx-0 sm:pb-6">
+        <DragAndDropProvider
+          columns={columns}
+          onMoveTask={handleMoveTask}
+          onReorderTask={handleReorderTask}
+        >
+          <div className="flex flex-row flex-nowrap justify-start items-stretch gap-3 min-w-max px-3 pb-2 sm:gap-4 sm:px-0 sm:pb-0">
+            {columns.map((column: ColumnWithTasks) => (
+              <div key={column.id} className="w-[240px] min-w-[240px] sm:w-[260px] sm:min-w-[260px] md:w-[280px] md:min-w-[280px]">
                 <Column column={column} onTaskClick={handleTaskClick} />
               </div>
             ))}

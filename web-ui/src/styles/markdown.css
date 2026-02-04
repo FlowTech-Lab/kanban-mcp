@@ -3,7 +3,12 @@
   line-height: 1.6;
 }
 
-/* Headings */
+/* Headings – New York dark */
+.markdown-content h1, .markdown-content h2, .markdown-content h3,
+.markdown-content h4, .markdown-content h5, .markdown-content h6 {
+  color: var(--ny-text, #e5e5e5);
+}
+
 .markdown-content h1 {
   font-size: 1.8em;
   margin-top: 1em;
@@ -39,15 +44,17 @@
   font-weight: 600;
 }
 
-/* Paragraphs and spacing */
+/* Paragraphs and spacing – New York dark */
 .markdown-content p {
   margin-bottom: 1em;
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Lists */
+/* Lists – New York dark */
 .markdown-content ul, .markdown-content ol {
   margin-bottom: 1em;
   padding-left: 2em;
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
 .markdown-content ul {
@@ -62,50 +69,54 @@
   margin-bottom: 0.5em;
 }
 
-/* Blockquotes */
+/* Blockquotes – New York dark */
 .markdown-content blockquote {
-  border-left: 4px solid #e5e7eb;
+  border-left: 4px solid var(--ny-accent);
   padding-left: 1em;
   margin-left: 0;
   margin-right: 0;
   margin-bottom: 1em;
-  color: #6b7280;
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
-/* Code blocks */
+/* Code blocks – New York dark */
 .markdown-content pre {
-  background-color: #f3f4f6;
-  border-radius: 0.375rem;
+  background-color: var(--ny-surface, #141414);
+  border: 1px solid var(--ny-border, #2a2a2a);
+  border-radius: 0.5rem;
   padding: 1em;
   overflow-x: auto;
   margin-bottom: 1em;
 }
 
 .markdown-content code {
-  background-color: #f3f4f6;
+  background-color: var(--ny-surface-elevated, #1c1c1c);
   border-radius: 0.25rem;
   padding: 0.2em 0.4em;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.875em;
+  color: var(--ny-text, #e5e5e5);
 }
 
 .markdown-content pre code {
   background-color: transparent;
   padding: 0;
   border-radius: 0;
+  color: var(--ny-text, #e5e5e5);
 }
 
-/* Links */
+/* Links – New York dark (gold accent) */
 .markdown-content a {
-  color: #3b82f6;
+  color: var(--ny-accent, #c9a227);
   text-decoration: underline;
 }
 
 .markdown-content a:hover {
+  color: var(--ny-accent-hover, #d4af37);
   text-decoration: none;
 }
 
-/* Tables */
+/* Tables – New York dark */
 .markdown-content table {
   border-collapse: collapse;
   width: 100%;
@@ -113,19 +124,24 @@
 }
 
 .markdown-content th, .markdown-content td {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--ny-border, #2a2a2a);
   padding: 0.5em;
 }
 
 .markdown-content th {
-  background-color: #f9fafb;
+  background-color: var(--ny-surface, #141414);
   font-weight: 600;
+  color: var(--ny-text, #e5e5e5);
+}
+
+.markdown-content td {
+  color: var(--ny-text-muted, #a3a3a3);
 }
 
 /* Horizontal rule */
 .markdown-content hr {
   border: 0;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--ny-border, #2a2a2a);
   margin: 1.5em 0;
 }
 

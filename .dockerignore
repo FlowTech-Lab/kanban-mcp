@@ -4,10 +4,6 @@
 # Build directories
 **/dist
 
-# Web server and web UI (not needed for the MCP server)
-web-server/
-web-ui/
-
 # Git
 .git
 .gitignore

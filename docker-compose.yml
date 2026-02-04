@@ -1,0 +1,31 @@
+# Kanban MCP – Web UI, API, and MCP SSE server
+# Same ./data volume so UI and MCP share one database.
+# Cursor connects to kanban-mcp via SSE at http://<host>:8222/sse
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8221:8221"
+    environment:
+      MCP_KANBAN_DB_FOLDER_PATH: /data
+      HOST: "0.0.0.0"
+      PORT: "8221"
+    volumes:
+      - ./data:/data
+
+  mcp-sse:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8222:8222"
+    environment:
+      MCP_KANBAN_DB_FOLDER_PATH: /mcp
+      MCP_SSE_PORT: "8222"
+      MCP_SSE_HOST: "0.0.0.0"
+    volumes:
+      - ./data:/mcp
+    entrypoint: ["node", "mcp-server/dist/server-sse.js"]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Dialog, DialogPanel, DialogTitle } from '@headlessui/react';
 import { XMarkIcon, ChevronLeftIcon, ChevronRightIcon, PencilIcon } from '@heroicons/react/24/outline';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -70,24 +70,24 @@ export default function TaskDetail({
 
   return (
     <Dialog open={!!taskId} onClose={onClose} className="relative z-10">
-      <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
 
       <div className="fixed inset-0 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-            <DialogPanel className="pointer-events-auto w-screen max-w-2xl transform transition duration-500 ease-in-out">
-              <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
+          <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-0 sm:pl-10 md:pl-16">
+            <DialogPanel className="pointer-events-auto w-full max-w-full min-w-0 transform transition duration-500 ease-in-out sm:w-screen sm:max-w-xl md:max-w-2xl">
+              <div className="glass-panel-xl flex h-full flex-col overflow-y-auto rounded-none sm:rounded-l-xl border-l border-ny-border bg-ny-surface py-4 shadow-glass-lg sm:py-6">
                 <div className="px-4 sm:px-6">
-                  <div className="flex items-start justify-between">
-                    <DialogTitle className="text-base font-semibold text-gray-900">
+                  <div className="flex items-start justify-between gap-3">
+                    <DialogTitle className="font-editorial min-w-0 flex-1 text-base font-semibold text-ny-text break-words sm:text-lg">
                       {isLoading ? 'Loading...' : error ? 'Error loading task' : task?.title}
                     </DialogTitle>
-                    <div className="ml-3 flex h-7 items-center space-x-2">
+                    <div className="flex h-7 shrink-0 items-center gap-1 sm:ml-3 sm:gap-2">
                       {!isEditing && task && (
                         <button
                           type="button"
                           onClick={handleEditClick}
-                          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          className="relative rounded-lg bg-ny-surface-elevated text-ny-text-muted hover:text-ny-text hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg"
                           aria-label="Edit task"
                         >
                           <span className="absolute -inset-2.5" />
@@ -99,7 +99,7 @@ export default function TaskDetail({
                           type="button"
                           onClick={onPrevTask}
                           disabled={!hasPrevTask}
-                          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="relative rounded-lg bg-ny-surface-elevated text-ny-text-muted hover:text-ny-text hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label="Previous task"
                         >
                           <span className="absolute -inset-2.5" />
@@ -111,7 +111,7 @@ export default function TaskDetail({
                           type="button"
                           onClick={onNextTask}
                           disabled={!hasNextTask}
-                          className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="relative rounded-lg bg-ny-surface-elevated text-ny-text-muted hover:text-ny-text hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg disabled:opacity-50 disabled:cursor-not-allowed"
                           aria-label="Next task"
                         >
                           <span className="absolute -inset-2.5" />
@@ -121,7 +121,7 @@ export default function TaskDetail({
                       <button
                         type="button"
                         onClick={isEditing ? handleCancelClick : onClose}
-                        className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="relative rounded-lg bg-ny-surface-elevated text-ny-text-muted hover:text-ny-text hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg"
                       >
                         <span className="absolute -inset-2.5" />
                         <span className="sr-only">Close panel</span>
@@ -133,13 +133,13 @@ export default function TaskDetail({
                 <div className="relative mt-4 flex-1 px-4 sm:px-6">
                   {isLoading ? (
                     <div className="flex justify-center items-center h-64">
-                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+                      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ny-accent" aria-hidden />
                     </div>
                   ) : error ? (
-                    <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4">
+                    <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mb-4">
                       <div className="flex">
                         <div className="ml-3">
-                          <p className="text-sm text-red-700">
+                          <p className="text-sm text-red-200">
                             Error loading task: {error instanceof Error ? error.message : 'Unknown error'}
                           </p>
                         </div>
@@ -152,13 +152,13 @@ export default function TaskDetail({
                           <textarea
                             value={editContent}
                             onChange={(e) => setEditContent(e.target.value)}
-                            className="w-full h-64 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm font-mono"
+                            className="w-full min-h-[200px] p-3 rounded-lg border border-ny-border bg-ny-surface-elevated text-ny-text placeholder-ny-text-muted focus:outline-none focus:ring-2 focus:ring-ny-accent text-sm font-mono"
                           />
-                          <div className="flex justify-end space-x-2">
+                          <div className="flex flex-wrap justify-end gap-2">
                             <button
                               type="button"
                               onClick={handleCancelClick}
-                              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                              className="px-4 py-2 text-sm font-medium text-ny-text bg-ny-surface-elevated border border-ny-border rounded-lg hover:bg-ny-accent-muted focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg"
                             >
                               Cancel
                             </button>
@@ -166,16 +166,16 @@ export default function TaskDetail({
                               type="button"
                               onClick={handleSaveClick}
                               disabled={updateTaskMutation.isPending}
-                              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="px-4 py-2 text-sm font-medium text-ny-bg bg-ny-accent rounded-lg hover:bg-ny-accent-hover focus:outline-none focus:ring-2 focus:ring-ny-accent focus:ring-offset-2 focus:ring-offset-ny-bg disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                               {updateTaskMutation.isPending ? 'Saving...' : 'Save'}
                             </button>
                           </div>
                           {updateTaskMutation.isError && (
-                            <div className="bg-red-50 border-l-4 border-red-400 p-4 mt-2">
+                            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mt-2">
                               <div className="flex">
                                 <div className="ml-3">
-                                  <p className="text-sm text-red-700">
+                                  <p className="text-sm text-red-200">
                                     Error updating task: {updateTaskMutation.error instanceof Error ? updateTaskMutation.error.message : 'Unknown error'}
                                   </p>
                                 </div>
@@ -187,25 +187,25 @@ export default function TaskDetail({
                         <div>
                           <MarkdownRenderer 
                             content={task.content} 
-                            className="mt-2 text-sm text-gray-900" 
+                            className="mt-2 text-sm text-ny-text-muted prose-invert max-w-none" 
                           />
                         </div>
                       )}
                       <div>
-                        <h3 className="text-base font-medium text-gray-600">Details</h3>
-                        <dl className="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
-                          <div className="flex justify-between py-3 text-sm">
-                            <dt className="text-gray-500">Created</dt>
-                            <dd className="text-gray-900">{new Date(task.created_at).toLocaleString()}</dd>
+                        <h3 className="font-editorial text-base font-semibold text-ny-text">Details</h3>
+                        <dl className="mt-2 divide-y divide-ny-border border-t border-b border-ny-border">
+                          <div className="flex flex-wrap justify-between gap-x-4 py-3 text-sm">
+                            <dt className="text-ny-text-muted">Created</dt>
+                            <dd className="text-ny-text">{new Date(task.created_at).toLocaleString()}</dd>
                           </div>
-                          <div className="flex justify-between py-3 text-sm">
-                            <dt className="text-gray-500">Updated</dt>
-                            <dd className="text-gray-900">{new Date(task.updated_at).toLocaleString()}</dd>
+                          <div className="flex flex-wrap justify-between gap-x-4 py-3 text-sm">
+                            <dt className="text-ny-text-muted">Updated</dt>
+                            <dd className="text-ny-text">{new Date(task.updated_at).toLocaleString()}</dd>
                           </div>
                           {task.update_reason && (
-                            <div className="flex flex-col justify-between py-3 text-sm">
-                              <dt className="text-gray-500">Update Reason</dt>
-                              <dd className="text-gray-900">{task.update_reason}</dd>
+                            <div className="flex flex-col gap-1 py-3 text-sm">
+                              <dt className="text-ny-text-muted">Update Reason</dt>
+                              <dd className="text-ny-text">{task.update_reason}</dd>
                             </div>
                           )}
                         </dl>
