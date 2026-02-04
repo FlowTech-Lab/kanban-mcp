@@ -147,6 +147,7 @@ In your MCP client (e.g. Cursor), add:
         "add-task-to-board",
         "move-task",
         "update-task",
+        "reorder-task-in-column",
         "delete-task",
         "get-board-info",
         "get-task-info",
@@ -185,6 +186,7 @@ The Web UI is responsive: boards scroll horizontally on narrow viewports (mobile
 - List all boards (name, goal, created/updated dates) and open or delete a board
 - View a board with its columns (On Hold, To Do, In Progress, Done) and task cards
 - Drag and drop tasks between columns (respects WIP limits; API move with optional reason)
+- Drag and drop within a column to reorder tasks (e.g. put a card first in To Do)
 - Open a task in a side panel: markdown content, edit content, navigate previous/next task
 - Delete board with confirmation dialog
 - Success and error notifications (e.g. move failed when column is full)
@@ -228,6 +230,7 @@ See [docs/CURSOR_MCP_AND_USAGE.md](docs/CURSOR_MCP_AND_USAGE.md) for detailed co
 | **add-task-to-board** | Add a task to the board’s landing column (To Do). Content is markdown. | `boardId`, `title`, `content` |
 | **move-task** | Move a task to another column; respects WIP limits. | `taskId`, `targetColumnId`, `reason` (optional) |
 | **update-task** | Update the markdown content of an existing task. | `taskId`, `content` |
+| **reorder-task-in-column** | Change a task’s position within its column (0 = first). | `taskId`, `position` (0-based) |
 | **delete-task** | Delete a task. | `taskId` |
 | **get-board-info** | Return board metadata, columns, and tasks (no task body). | `boardId` |
 | **get-task-info** | Return full task including markdown content. | `taskId` |
@@ -245,6 +248,7 @@ The web server (port 8221) exposes a REST API used by the Web UI. Same database 
 | GET | `/api/tasks/:taskId` | Get task (full content) |
 | PUT | `/api/tasks/:taskId` | Update task content (`body: { content }`) |
 | POST | `/api/tasks/:taskId/move` | Move task to another column (`body: { targetColumnId, reason? }`) |
+| POST | `/api/tasks/:taskId/reorder` | Reorder task within its column (`body: { position }`, 0-based) |
 
 ### Prompts
 

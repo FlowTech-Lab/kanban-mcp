@@ -88,6 +88,7 @@ Add to your MCP configuration (e.g. `~/.cursor/mcp.json`):
         "add-task-to-board",
         "move-task",
         "update-task",
+        "reorder-task-in-column",
         "delete-task",
         "get-board-info",
         "get-task-info",

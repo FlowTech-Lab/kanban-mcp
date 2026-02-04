@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getBoardWithColumnsAndTasks, moveTask } from "../services/api";
+import { getBoardWithColumnsAndTasks, moveTask, reorderTask } from "../services/api";
 import Column from "./Column";
 import TaskDetail from "./TaskDetail";
 import { DragAndDropProvider } from "../contexts/DragAndDropContext";
@@ -123,6 +123,25 @@ export default function BoardDetail() {
     }
   };
 
+  const handleReorderTask = async (
+    taskId: string,
+    _columnId: string,
+    position: number
+  ) => {
+    try {
+      await reorderTask(taskId, position);
+      await queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+    } catch (error) {
+      console.error("Failed to reorder task:", error);
+      notifications.error(
+        "Failed to reorder task",
+        error instanceof Error ? error.message : "An unexpected error occurred."
+      );
+      queryClient.invalidateQueries({ queryKey: ["board", boardId] });
+      return Promise.reject(error);
+    }
+  };
+
   if (error || !data) {
     return (
       <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 mb-4 backdrop-blur-sm">
@@ -181,7 +200,11 @@ export default function BoardDetail() {
 
       {/* Horizontal scroll area – explicit flex, left-aligned (narrow desktop + mobile) */}
       <div className="scroll-board -mx-3 w-full max-w-full overflow-x-auto pb-4 sm:mx-0 sm:pb-6">
-        <DragAndDropProvider onMoveTask={handleMoveTask}>
+        <DragAndDropProvider
+          columns={columns}
+          onMoveTask={handleMoveTask}
+          onReorderTask={handleReorderTask}
+        >
           <div className="flex flex-row flex-nowrap justify-start items-stretch gap-3 min-w-max px-3 pb-2 sm:gap-4 sm:px-0 sm:pb-0">
             {columns.map((column: ColumnWithTasks) => (
               <div key={column.id} className="w-[240px] min-w-[240px] sm:w-[260px] sm:min-w-[260px] md:w-[280px] md:min-w-[280px]">

@@ -1,7 +1,25 @@
-import { ColumnWithTasks } from '../types';
+import { ColumnWithTasks, TaskSummary } from '../types';
 import TaskCard from './TaskCard';
 import { useDroppable } from '@dnd-kit/core';
 import { useDragAndDrop } from '../contexts/DragAndDropContext';
+
+interface TaskDroppableProps {
+  task: TaskSummary;
+  column: ColumnWithTasks;
+  onTaskClick: (taskId: string) => void;
+}
+
+function TaskDroppable({ task, column, onTaskClick }: TaskDroppableProps) {
+  const { setNodeRef } = useDroppable({
+    id: task.id,
+    data: { task, column },
+  });
+  return (
+    <li ref={setNodeRef} onClick={() => onTaskClick(task.id)}>
+      <TaskCard task={task} column={column} isMoving={false} />
+    </li>
+  );
+}
 
 interface ColumnProps {
   column: ColumnWithTasks;
@@ -47,13 +65,12 @@ export default function Column({ column, onTaskClick }: ColumnProps) {
         ) : (
           <ul className="space-y-2">
             {column.tasks.map((task) => (
-              <li key={task.id} onClick={() => onTaskClick(task.id)}>
-                <TaskCard 
-                  task={task} 
-                  column={column} 
-                  isMoving={false}
-                />
-              </li>
+              <TaskDroppable
+                key={task.id}
+                task={task}
+                column={column}
+                onTaskClick={onTaskClick}
+              />
             ))}
           </ul>
         )}

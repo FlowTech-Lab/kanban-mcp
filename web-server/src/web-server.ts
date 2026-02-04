@@ -230,6 +230,45 @@ class WebServer {
       }
     );
 
+    // Reorder a task within its column (0-based position)
+    this.server.post(
+      "/api/tasks/:taskId/reorder",
+      async (
+        request: FastifyRequest<{
+          Params: { taskId: string };
+          Body: { position: number };
+        }>,
+        reply: FastifyReply
+      ) => {
+        try {
+          const { taskId } = request.params;
+          const { position } = request.body as { position: number };
+
+          if (typeof position !== "number" || position < 0) {
+            return reply.code(400).send({ error: "position must be a non-negative number" });
+          }
+
+          const task = this.kanbanDB.getTaskById(taskId);
+          if (!task) {
+            return reply.code(404).send({ error: "Task not found" });
+          }
+
+          this.kanbanDB.reorderTaskInColumn(taskId, position);
+
+          return reply.code(200).send({
+            success: true,
+            message: "Task reordered successfully",
+            taskId,
+            columnId: task.column_id,
+            position,
+          });
+        } catch (error) {
+          request.log.error(error);
+          return reply.code(500).send({ error: "Internal Server Error" });
+        }
+      }
+    );
+
     // handle 404 by redirecting to /
     this.server.setNotFoundHandler((request: FastifyRequest, reply: FastifyReply) => {
       reply.redirect("/");

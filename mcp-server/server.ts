@@ -320,6 +320,56 @@ export function createMcpServer(kanbanDB: KanbanDB): McpServer {
   );
 
   tool(
+    "reorder-task-in-column",
+    "Change the order of a task within its column. Position is 0-based (0 = first in column). Use get-board-info to see current task order and task IDs.",
+    {
+      taskId: z.string(),
+      position: z.number().int().min(0),
+    },
+    async ({ taskId, position }: { taskId: string; position: number }) => {
+      const task = kanbanDB.getTaskById(taskId);
+
+      if (!task) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: Could not find task with ID: ${taskId}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      try {
+        kanbanDB.reorderTaskInColumn(taskId, position);
+      } catch (err) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error: ${err instanceof Error ? err.message : "Failed to reorder task"}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      const column = kanbanDB.getColumnById(task.column_id);
+      const columnName = column ? column.name : "column";
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Moved task "${task.title}" to position ${position} (0-based) in "${columnName}".`,
+          },
+        ],
+      };
+    }
+  );
+
+  tool(
     "delete-task",
   "Delete a task from a kanban board.",
   {

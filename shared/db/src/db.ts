@@ -258,6 +258,38 @@ export class KanbanDB {
     updateTaskStmt.run(targetColumnId, position, now, reason || null, taskId);
   }
 
+  /**
+   * Reorder a task within its column. newPosition is 0-based (0 = first).
+   */
+  public reorderTaskInColumn(taskId: string, newPosition: number): void {
+    const task = this.getTaskById(taskId);
+    if (!task) {
+      throw new Error(`Task with ID ${taskId} not found`);
+    }
+
+    const tasks = this.getTasksForColumn(task.column_id);
+    const currentIndex = tasks.findIndex((t) => t.id === taskId);
+    if (currentIndex === -1) return;
+
+    const clampedPosition = Math.max(0, Math.min(newPosition, tasks.length - 1));
+    if (clampedPosition === currentIndex) return;
+
+    const reordered = tasks.filter((t) => t.id !== taskId);
+    reordered.splice(clampedPosition, 0, tasks[currentIndex]!);
+
+    const now = new Date().toISOString();
+    const updateStmt = this.db.prepare<[number, string, string]>(
+      `UPDATE tasks SET position = ?, updated_at = ? WHERE id = ?`
+    );
+
+    const transaction = this.db.transaction(() => {
+      for (let i = 0; i < reordered.length; i++) {
+        updateStmt.run(i, now, reordered[i]!.id);
+      }
+    });
+    transaction();
+  }
+
   public getColumnsForBoard(boardId: string): Column[] {
     const findColumnsStmt = this.db.prepare<[string], Column>(`
       SELECT id, board_id, name, position, wip_limit, is_done_column

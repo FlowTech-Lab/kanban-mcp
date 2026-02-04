@@ -53,6 +53,29 @@ export async function moveTask(taskId: string, targetColumnId: string, reason?: 
   return response.json();
 }
 
+export async function reorderTask(taskId: string, position: number): Promise<{
+  success: boolean;
+  message: string;
+  taskId: string;
+  columnId: string;
+  position: number;
+}> {
+  const response = await fetch(`${API_BASE_URL}/tasks/${taskId}/reorder`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ position }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || `Failed to reorder task with ID ${taskId}`);
+  }
+
+  return response.json();
+}
+
 export async function updateTask(taskId: string, content: string): Promise<{
   success: boolean;
   message: string;
