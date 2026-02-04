@@ -188,7 +188,7 @@ export function createMcpServer(kanbanDB: KanbanDB): McpServer {
         content: [
           {
             type: "text",
-            text: `Task is already in the target column.`,
+            text: `Task is already in the target column. To change its position within the column (e.g. put it first), use the tool **reorder-task-in-column** with arguments: taskId (string), position (number, 0-based; 0 = first in column).`,
           },
         ],
         isError: false,

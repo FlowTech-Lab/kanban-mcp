@@ -232,6 +232,8 @@ See [docs/CURSOR_MCP_AND_USAGE.md](docs/CURSOR_MCP_AND_USAGE.md) for detailed co
 | **update-task** | Update the markdown content of an existing task. | `taskId`, `content` |
 | **reorder-task-in-column** | Change a task’s position within its column (0 = first). | `taskId`, `position` (0-based) |
 | **delete-task** | Delete a task. | `taskId` |
+
+**Reorder vs move:** `move-task` only moves a task *between* columns (and does nothing if the task is already in the target column). To change the *order* of a task within the same column (e.g. put a card first in To Do), use **reorder-task-in-column** with `taskId` and `position` (0 = first, 1 = second, …).
 | **get-board-info** | Return board metadata, columns, and tasks (no task body). | `boardId` |
 | **get-task-info** | Return full task including markdown content. | `taskId` |
 | **list-boards** | List all boards (name, id, creation time, goal). | None |
