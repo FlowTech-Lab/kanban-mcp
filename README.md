@@ -180,6 +180,15 @@ Then configure the MCP client with `type: "sse"` and `url: "http://<host>:8222/s
 
 The Web UI is responsive: boards scroll horizontally on narrow viewports (mobile or reduced desktop window); vertical scroll is available where needed.
 
+**Web UI features:**
+
+- List all boards (name, goal, created/updated dates) and open or delete a board
+- View a board with its columns (On Hold, To Do, In Progress, Done) and task cards
+- Drag and drop tasks between columns (respects WIP limits; API move with optional reason)
+- Open a task in a side panel: markdown content, edit content, navigate previous/next task
+- Delete board with confirmation dialog
+- Success and error notifications (e.g. move failed when column is full)
+
 ### With Docker Compose
 
 After `docker compose up -d`, open:
@@ -223,6 +232,19 @@ See [docs/CURSOR_MCP_AND_USAGE.md](docs/CURSOR_MCP_AND_USAGE.md) for detailed co
 | **get-board-info** | Return board metadata, columns, and tasks (no task body). | `boardId` |
 | **get-task-info** | Return full task including markdown content. | `taskId` |
 | **list-boards** | List all boards (name, id, creation time, goal). | None |
+
+### HTTP API (Web server)
+
+The web server (port 8221) exposes a REST API used by the Web UI. Same database as the MCP server.
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/boards` | List all boards |
+| GET | `/api/boards/:boardId` | Get board with columns and tasks |
+| DELETE | `/api/boards/:boardId` | Delete a board |
+| GET | `/api/tasks/:taskId` | Get task (full content) |
+| PUT | `/api/tasks/:taskId` | Update task content (`body: { content }`) |
+| POST | `/api/tasks/:taskId/move` | Move task to another column (`body: { targetColumnId, reason? }`) |
 
 ### Prompts
 
