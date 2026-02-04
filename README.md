@@ -5,6 +5,7 @@ An MCP (Model Context Protocol) tool set providing kanban-based task management 
 ## Highlights
 
 - Column capacity and work-in-progress (WIP) limits
+- Move tasks between columns and **reorder tasks within a column** (MCP tool + Web UI drag-and-drop)
 - Embedded SQLite database; no external DB required
 - Web UI (React, Tailwind CSS) for viewing and editing boards and tasks — responsive (mobile and narrow desktop), New York dark theme
 - Predefined MCP prompts for starting and resuming workflows
@@ -233,7 +234,9 @@ See [docs/CURSOR_MCP_AND_USAGE.md](docs/CURSOR_MCP_AND_USAGE.md) for detailed co
 | **reorder-task-in-column** | Change a task’s position within its column (0 = first). | `taskId`, `position` (0-based) |
 | **delete-task** | Delete a task. | `taskId` |
 
-**Reorder vs move:** `move-task` only moves a task *between* columns (and does nothing if the task is already in the target column). To change the *order* of a task within the same column (e.g. put a card first in To Do), use **reorder-task-in-column** with `taskId` and `position` (0 = first, 1 = second, …).
+**Reorder within a column:** To change the order of a task in its column (e.g. put a card first in To Do), use **reorder-task-in-column** with `taskId` and `position` (0-based: 0 = first, 1 = second, …). Example: after `get-board-info` you see a task in To Do with ID `abc-123` at position 2; call `reorder-task-in-column` with `taskId: "abc-123"` and `position: 0` to move it to the top of the column.
+
+**Reorder vs move:** `move-task` only moves a task *between* columns (and does nothing if the task is already in the target column). Use **reorder-task-in-column** for order changes within the same column.
 | **get-board-info** | Return board metadata, columns, and tasks (no task body). | `boardId` |
 | **get-task-info** | Return full task including markdown content. | `taskId` |
 | **list-boards** | List all boards (name, id, creation time, goal). | None |
