@@ -69,7 +69,7 @@ export default function TaskDetail({
   if (!taskId) return null;
 
   return (
-    <Dialog open={!!taskId} onClose={onClose} className="relative z-10">
+    <Dialog open={!!taskId} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" />
 
       <div className="fixed inset-0 overflow-hidden">
