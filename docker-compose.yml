@@ -1,9 +1,11 @@
 # Kanban MCP – Web UI, API, and MCP SSE server
 # Same ./data volume so UI and MCP share one database.
 # Cursor connects to kanban-mcp via SSE at http://<host>:8222/sse
+# restart: unless-stopped — auto-restart on crash and after host reboot (not after explicit stop).
 
 services:
   web:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile.web
@@ -17,6 +19,7 @@ services:
       - ./data:/data
 
   mcp-sse:
+    restart: unless-stopped
     build:
       context: .
       dockerfile: Dockerfile
